@@ -1,5 +1,6 @@
 "use strict";
-var Rx = require('rxjs/Rx');
+Object.defineProperty(exports, "__esModule", { value: true });
+var Rx = require("rxjs/Rx");
 /*
 https://github.com/ReactiveX/RxJS/blob/master/MIGRATION.md
 */
