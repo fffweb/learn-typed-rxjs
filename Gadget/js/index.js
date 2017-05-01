@@ -1,6 +1,39 @@
+var url = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
 $(document).ready(function() {
-    $("button").click(ajaxJson);
+    // $("button").click(ajaxJson);
+    // ajax_test();
+    Observable.interval(1000)
+        .mergeMap(x => { return get('/app/contents.json'); })
+        .subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); })
+
 });
+
+// $(document).ready(function() {
+//     $("button").click(ajaxJson);
+// });
+
+function get(url) {
+    return Observable.create(function(observer) {
+        // Make a traditional Ajax request
+        var req = new XMLHttpRequest();
+        req.open('GET', url);
+        req.onload = function() {
+            if (req.status == 200) {
+                // If the status is 200, meaning there have been no problems,
+                // Yield the result to listeners and complete the sequence
+                observer.next(req.response);
+                observer.complete();
+            } else {
+                // Otherwise, signal to listeners that there has been an error
+                observer.error(new Error(req.statusText));
+            }
+        };
+        req.onerror = function() {
+            observer.error(new Error("Unknown Error"));
+        };
+        req.send();
+    });
+}
 
 // $(document).ready(function() {
 
@@ -14,7 +47,7 @@ $(document).ready(function() {
 
 function ajax_test() {
 
-    $.getJSON("https://www.bitstamp.net/api/eur_usd/", function(data) {
+    $.get(url, function(data) {
         alert(data);
     });
 }
