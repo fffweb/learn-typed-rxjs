@@ -1,10 +1,11 @@
 var url = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
 $(document).ready(function() {
     // $("button").click(ajaxJson);
-    // ajax_test();
-    Observable.interval(1000)
-        .mergeMap(x => { return get('/app/contents.json'); })
-        .subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); })
+    ajaxJson();
+    ajax_test();
+    // Rx.Observable.interval(1000)
+    //     .mergeMap(x => { return get('/contents.json'); })
+    //     .subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); })
 
 });
 
@@ -13,7 +14,7 @@ $(document).ready(function() {
 // });
 
 function get(url) {
-    return Observable.create(function(observer) {
+    return Rx.Observable.create(function(observer) {
         // Make a traditional Ajax request
         var req = new XMLHttpRequest();
         req.open('GET', url);
