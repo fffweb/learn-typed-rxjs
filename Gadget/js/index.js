@@ -1,14 +1,117 @@
 var url = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
 $(document).ready(function() {
     // $("button").click(ajaxJson);
-    ajaxJson();
-    ajax_test();
-    // Rx.Observable.interval(1000)
-    //     .mergeMap(x => { return get('/contents.json'); })
-    //     .subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); })
+    // getSinaObservable(url).subscribe()
+    // ajaxJson();
+    // ajax_test();
+    // var subscription = getSinaObservable(url).subscribe(observer);
+    Rx.Observable.from([1, 2, 3, 4])
+        .map(i => getFreshApiData())
+        .subscribe(val => console.log('regular map result: ' + val));
+
+    //vs
+
+    Rx.Observable.from([1, 2, 3, 4])
+        .mergeMap(i => getFreshApiData())
+        .subscribe(val => console.log('mergeMap result: ' + val));
+
+    function getFreshApiData() {
+        return Rx.Observable.of('retrieved new data')
+            .delay(1000);
+    }
+
+    Rx.Observable.interval(2500).mergeMap(x => {
+            return rx.Observable.interval(1000)
+        })
+        .subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); })
+        // var jqxhr = $.get(url)
+        //     .done(function(data) {
+
+    //         alert("second success");
+
+    //     })
+    //     .fail(function() {
+
+    //         alert("error");
+
+    //     })
+    //     .always(function() {
+
+    //         alert("finished");
+
+    //     });
+
+
+
 
 });
 
+function getSinaObservable(url) {
+    return Rx.Observable.create(function(observer) {
+        var subscribed = true;
+        $.get(url)
+            .done(function(data) {
+                // If client is still interested in the results, send them.
+                if (subscribed) {
+                    // Send data to the client
+                    observer.next(data);
+                    // Immediately complete the sequence
+                    observer.complete();
+                }
+                // alert("second success");
+
+            })
+            .fail(function() {
+                if (subscribed) {
+                    // Inform the client that an error occurred.
+                    observer.error(ex);
+                }
+                // alert("error");
+
+            })
+            // $.get(url, {
+            //     success: function(data) {
+            //         // If client is still interested in the results, send them.
+            //         if (subscribed) {
+            //             // Send data to the client
+            //             observer.next(data);
+            //             // Immediately complete the sequence
+            //             observer.complete();
+            //         }
+            //     },
+            //     error: function(ex) {
+            //         // If client is still interested in the results, send them.
+            //         if (subscribed) {
+            //             // Inform the client that an error occurred.
+            //             observer.error(ex);
+            //         }
+            //     }
+            // });
+
+        // Definition of the Subscription objects unsubscribe (dispose in RxJS 4) method.
+        return function() {
+            subscribed = false;
+        }
+    });
+};
+
+var observer = {
+    // onNext in RxJS 4
+    next: function(data) {
+        alert(JSON.stringify(data));
+    },
+    // onError in RxJS 4
+    error: function(err) {
+        alert(err);
+    },
+    // onComplete in RxJS 4
+    complete: function() {
+        alert("The asynchronous operation has completed.");
+    }
+};
+
+// var subscription =
+//     getSinaObservable(url).subscribe(observer);
 // $(document).ready(function() {
 //     $("button").click(ajaxJson);
 // });
