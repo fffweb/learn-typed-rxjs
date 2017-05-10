@@ -1,5 +1,5 @@
 import {Observable, Observer} from 'rxjs/Rx';
-
+var url = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
 function get(url) {
     return Observable.create(function(observer: Observer<String>) {
     // Make a traditional Ajax request
@@ -24,7 +24,7 @@ function get(url) {
 });
 }
 // Create an Ajax Observable
-var test = get('/app/contents.json');
+var test = get(url);
 test.subscribe(
     function next(x) { console.log('Result: ' + x); },
     function error(err) { console.log('Error: ' + err); },

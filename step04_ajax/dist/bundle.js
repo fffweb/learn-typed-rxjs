@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -5564,6 +5564,7 @@ exports.Symbol = Symbol;
 "use strict";
 
 var Rx_1 = __webpack_require__(66);
+var url = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
 function get(url) {
     return Rx_1.Observable.create(function (observer) {
         // Make a traditional Ajax request
@@ -5588,7 +5589,7 @@ function get(url) {
     });
 }
 // Create an Ajax Observable
-var test = get('/app/contents.json');
+var test = get(url);
 test.subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); });
 
 
@@ -5794,10 +5795,6 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
