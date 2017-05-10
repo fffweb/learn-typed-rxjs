@@ -5589,8 +5589,15 @@ function get(url) {
     });
 }
 // Create an Ajax Observable
-var test = get(url);
-test.subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); });
+// var test = get(url);
+// test.subscribe(
+//     function next(x) { console.log('Result: ' + x); },
+//     function error(err) { console.log('Error: ' + err); },
+//     function complete() { console.log('Completed'); }
+// );
+Rx_1.Observable.interval(1000).mergeMap(function (x) {
+    return get(url);
+}).subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); });
 
 
 /***/ }),
