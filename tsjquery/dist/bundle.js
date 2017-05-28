@@ -16575,6 +16575,10 @@ const Rx_1 = __webpack_require__(70);
 const $ = __webpack_require__(69);
 var url_sina = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
 $(document).ready(() => {
+    // console.log("hi");
+    // alert("hi");
+    var g = new IO.Script();
+    g.load(url_sina, (b) => { alert(window["hq_str_BU1709"]); });
     jsonp(url_sina, function (data) {
         alert(data);
     });
