@@ -1,17 +1,40 @@
 import { Observable, Observer } from 'rxjs/Rx';
 import * as $ from 'jquery';
 var url_sina = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
- declare var IO:any;
+declare var IO: any;
+var g = new IO.Script();
+
 $(document).ready(() => {
     // console.log("hi");
     // alert("hi");
-     var g = new IO.Script();
-     g.load(url_sina, (b)=>{ alert(window["hq_str_BU1709"])});
-    jsonp(url_sina, function (data) {
-        alert(data);
-    });
+    // var g = new IO.Script();
+    // g.load(url_sina, (b) => {
+    //                 console.debug(window["hq_str_BU1709"]);
+
+    Observable.interval(1000).mergeMap(x => {
+        return getSina(url_sina)
+    }).subscribe(
+        function next(x) { console.log('Result: ' + x); },
+        function error(err) { console.log('Error: ' + err); },
+        function complete() { console.log('Completed'); }
+        );
+
+    // jsonp(url_sina, function (data) {
+    //     alert(data);
+    // });
 })
 
+function getSina(url) {
+    return Observable.create(function (observer: Observer<String>) {
+        // Make a traditional Ajax request
+        g.load(url_sina, (b) => {
+            console.debug(window["hq_str_BU1709"]);
+            observer.next(window["hq_str_BU1709"]);
+            observer.complete();
+        });
+    });
+
+}
 
 function get(url) {
     return Observable.create(function (observer: Observer<String>) {
@@ -45,7 +68,7 @@ function get(url) {
 // );
 
 // Observable.interval(1000).mergeMap(x => {
-//     return get(url)
+//     return get(url_sina)
 // }).subscribe(
 //     function next(x) { console.log('Result: ' + x); },
 //     function error(err) { console.log('Error: ' + err); },
