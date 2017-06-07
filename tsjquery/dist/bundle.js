@@ -16594,10 +16594,15 @@ function getSina(url) {
         g.load(url_sina, (b) => {
             console.debug(window["hq_str_BU1709"]);
             observer.next(window["hq_str_BU1709"]);
+            BU_Stream$.next(window["hq_str_BU1709"]);
             observer.complete();
         });
     });
 }
+const BU_Stream$ = new Rx_1.Subject();
+BU_Stream$.distinctUntilChanged().subscribe((value) => {
+    console.log("Bu_Stream:" + value);
+});
 function get(url) {
     return Rx_1.Observable.create(function (observer) {
         // Make a traditional Ajax request

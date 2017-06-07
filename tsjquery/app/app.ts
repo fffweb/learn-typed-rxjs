@@ -1,4 +1,4 @@
-import { Observable, Observer } from 'rxjs/Rx';
+import { Observable, Observer,Subject } from 'rxjs/Rx';
 import * as $ from 'jquery';
 var url_sina = "http://hq.sinajs.cn/?list=BU1709,RU1709,I1709";
 declare var IO: any;
@@ -30,11 +30,17 @@ function getSina(url) {
         g.load(url_sina, (b) => {
             console.debug(window["hq_str_BU1709"]);
             observer.next(window["hq_str_BU1709"]);
+            BU_Stream$.next(window["hq_str_BU1709"]);
             observer.complete();
         });
     });
 
 }
+
+const BU_Stream$ =  new Subject<string>();
+BU_Stream$.distinctUntilChanged().subscribe((value) => {
+    console.log("Bu_Stream:"+value);
+});
 
 function get(url) {
     return Observable.create(function (observer: Observer<String>) {
