@@ -11,10 +11,12 @@ $(document).ready(() => {
     // g.load(url_sina, (b) => {
     //                 console.debug(window["hq_str_BU1709"]);
 
-    Observable.interval(1000).mergeMap(x => {
+    Observable.interval(5000).mergeMap(x => {
         return getSina(url_sina)
     }).subscribe(
-        function next(x) { console.log('Result: ' + x); },
+        function next(x) { 
+            // console.log('Result: ' + x); 
+        },
         function error(err) { console.log('Error: ' + err); },
         function complete() { console.log('Completed'); }
         );
@@ -28,7 +30,7 @@ function getSina(url) {
     return Observable.create(function (observer: Observer<String>) {
         // Make a traditional Ajax request
         g.load(url_sina, (b) => {
-            console.debug(window["hq_str_BU1709"]);
+            // console.debug(window["hq_str_BU1709"]);
             observer.next(window["hq_str_BU1709"]);
             BU_Stream$.next(window["hq_str_BU1709"]);
             observer.complete();
@@ -39,6 +41,7 @@ function getSina(url) {
 
 const BU_Stream$ =  new Subject<string>();
 BU_Stream$.distinctUntilChanged().subscribe((value) => {
+    console.log(new Date());
     console.log("Bu_Stream:"+value);
 });
 
