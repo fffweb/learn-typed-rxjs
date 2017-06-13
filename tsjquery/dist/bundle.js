@@ -16581,9 +16581,15 @@ $(document).ready(() => {
     // var g = new IO.Script();
     // g.load(url_sina, (b) => {
     //                 console.debug(window["hq_str_BU1709"]);
-    Rx_1.Observable.interval(1000).mergeMap(x => {
+    // getByRequest(url_zhuli);
+    // Create an Ajax Observable
+    var test = get(url_zhuli);
+    test.subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); });
+    Rx_1.Observable.interval(5000).mergeMap(x => {
         return getSina(url_sina);
-    }).subscribe(function next(x) { console.log('Result: ' + x); }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); });
+    }).subscribe(function next(x) {
+        // console.log('Result: ' + x); 
+    }, function error(err) { console.log('Error: ' + err); }, function complete() { console.log('Completed'); });
     // jsonp(url_sina, function (data) {
     //     alert(data);
     // });
@@ -16592,7 +16598,7 @@ function getSina(url) {
     return Rx_1.Observable.create(function (observer) {
         // Make a traditional Ajax request
         g.load(url_sina, (b) => {
-            console.debug(window["hq_str_BU1709"]);
+            // console.debug(window["hq_str_BU1709"]);
             observer.next(window["hq_str_BU1709"]);
             BU_Stream$.next(window["hq_str_BU1709"]);
             observer.complete();
@@ -16601,6 +16607,7 @@ function getSina(url) {
 }
 const BU_Stream$ = new Rx_1.Subject();
 BU_Stream$.distinctUntilChanged().subscribe((value) => {
+    console.log(new Date());
     console.log("Bu_Stream:" + value);
 });
 function get(url) {
@@ -16651,6 +16658,30 @@ function jsonp(url, callback) {
     script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
     document.body.appendChild(script);
     // console
+}
+var url_zhuli = "http://wmleo.cc/FutureTradeInfoCal/FutureTradeInfoCals?$top=50&$select=Symbol,DateTrade &$filter=DominantNum eq 1 &$orderby=DateTrade desc";
+function getByRequest(url) {
+    return Rx_1.Observable.create(function (observer) {
+        // Make a traditional Ajax request
+        var req = new XMLHttpRequest();
+        req.open('GET', url);
+        req.onload = function () {
+            if (req.status == 200) {
+                // If the status is 200, meaning there have been no problems,
+                // Yield the result to listeners and complete the sequence
+                observer.next(req.response);
+                observer.complete();
+            }
+            else {
+                // Otherwise, signal to listeners that there has been an error
+                observer.error(new Error(req.statusText));
+            }
+        };
+        req.onerror = function () {
+            observer.error(new Error("Unknown Error"));
+        };
+        req.send();
+    });
 }
 
 
